@@ -1,5 +1,5 @@
 /**
- *       Have the function MinWindowSubstring(strArr) take the array of strings stored in strArr, which will
+ *       Have the function minWindowSubstring(strArr) take the array of strings stored in strArr, which will
  *       contain only two strings, the first parameter being the string N and the second parameter being a string K
  *       of some characters, and your goal is to determine the smallest substring of N that contains
  *       all the characters in K. For example: if strArr is ["aaabaaddae", "aed"] then the smallest
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class Exe001_substring {
-    public static String MinWindowSubstring(String[] strArr) {
+    public static String minWindowSubstring(String[] strArr) {
 
         String result = strArr[0];
         String a = strArr[0];
@@ -59,7 +59,7 @@ class Exe001_substring {
 
     public static void main (String[] args) {
         String[] strArr = {"ahffaksfajeeubsne","jefaa"};
-        MinWindowSubstring(strArr);
+        minWindowSubstring(strArr);
     }//close main
 
 }//close class
