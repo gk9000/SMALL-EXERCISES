@@ -38,39 +38,143 @@ interface Structure {
     int count();
 }
 
-interface SimpleBlock {
+interface Block {
     String getColor();
     String getMaterial();
 }
 
-interface CompositeBlock extends SimpleBlock {
+interface CompositeBlock extends Block {
     List getBlocks();
 }
 
 
 public class Wall implements Structure{
-    private List <Block>blocks=new ArrayList<Block>();
-    Wall.Block tempObject= new Block("red", "wood");
+    private List <Block>blocks = new ArrayList<>();
+    static Wall wall = new Wall();
+    static Wall.ListOfBlocks aaa;
 
+
+    public static void main(String[] args) {
+        aaa = wall.new ListOfBlocks();
+
+        Wall.WoodenBlock br1=wall.new WoodenBlock("red");
+        Wall.WoodenBlock br2=wall.new WoodenBlock("white");
+        Wall.WoodenBlock br3=wall.new WoodenBlock("blue");
+        Wall.StoneBlock br4=wall.new StoneBlock("red");
+        Wall.StoneBlock br5=wall.new StoneBlock("white");
+        Wall.StoneBlock br6=wall.new StoneBlock("blue");
+
+
+        wall.aaa.addBlocks(br1);
+        aaa.addBlocks(br2);
+        aaa.addBlocks(br3);
+        aaa.addBlocks(br4);
+        aaa.addBlocks(br5);
+        aaa.addBlocks(br6);
+
+
+        System.out.println();
+        System.out.println("List of blocks: " + aaa.getBlocks().toString());
+        System.out.println();
+        System.out.println("All stone blocks: " + wall.findBlocksByMaterial("stone"));
+        System.out.println("All wooden blocks: " + wall.findBlocksByMaterial("wood"));
+        System.out.println();
+        System.out.println("A red block: " + wall.findBlockByColor("red"));
+        System.out.println("A white block: " + wall.findBlockByColor("white"));
+        System.out.println("A blue block: " + wall.findBlockByColor("blue"));
+        System.out.println();
+        System.out.println("List of blocks after sorting by color: " + aaa.getBlocks().toString());
+        System.out.println();
+        System.out.println("Number of blocks in the list: " + wall.count());
+    }//close main
+
+
+     // inner class woodenBlock
+    public class WoodenBlock implements Block {
+        private String color;
+        private String material;
+
+        public WoodenBlock(String color) {
+            this.color=color;
+            this.material="wood";
+        }
+
+        public String getColor(){
+            return color;
+        };
+        public String getMaterial(){
+            return material;
+        };
+
+        @Override
+        public String toString() {
+            return color + " " + material;
+        }
+    }//close inner class WoodenBlock
+
+
+    // inner class StoneBlock
+    public class StoneBlock implements Block {
+        private String color;
+        private String material;
+
+        public StoneBlock(String color) {
+            this.color=color;
+            this.material="stone";
+        }
+
+        public String getColor(){
+            return color;
+        };
+        public String getMaterial(){
+            return material;
+        };
+
+        @Override
+        public String toString() {
+            return color + " " + material;
+        }
+    }//close inner class StoneBlock
+
+    // inner class stoneBlock
+    public class ListOfBlocks implements CompositeBlock {
+
+        public void addBlocks(Block b){
+            blocks.add(b);
+        }
+
+        public List getBlocks(){
+            return blocks;
+        };
+
+        @Override
+        public String getColor() {
+            return null;
+        }
+
+        @Override
+        public String getMaterial() {
+            return null;
+        }
+    }//close inner class ListOfBlocks
 
     public Optional findBlockByColor(String color){
 
-            Comparator<Block> comp = new Comparator<Block>() {
-                public int compare(Block b1, Block b2) {
-                    return b1.getColor().compareTo(b2.getColor());
-                }
-            };
+        Comparator<Block> comp = new Comparator<Block>() {
+            public int compare(Block b1, Block b2) {
+                return b1.getColor().compareTo(b2.getColor());
+            }
+        };
 
-            Collections.sort(tempObject.getBlocks(), comp);
-            int index = Collections.binarySearch(tempObject.getBlocks(), new Block(color, "wood"), comp);
-            tempObject.getBlocks().remove(tempObject.getBlocks().size() - 1);
+        Collections.sort(aaa.getBlocks(), comp);
+        int index = Collections.binarySearch(aaa.getBlocks(), new StoneBlock(color), comp);
 
-            return Optional.of(tempObject.getBlocks().get(index));
+        return Optional.of(aaa.getBlocks().get(index));
     }; //close findBlockByColor
 
     public List findBlocksByMaterial(String material){
         List <Block>materialList=new ArrayList<Block>();
-        List <Block>tempList=new ArrayList<Block>(tempObject.getBlocks());
+        List <Block>tempList=new ArrayList<Block>(aaa.getBlocks());
         for(Block b : tempList){
             if(b.getMaterial().equals(material)){
                 materialList.add(b);
@@ -80,81 +184,9 @@ public class Wall implements Structure{
     }; //close findBlocksByMaterial
 
     public int count(){
-        return tempObject.getBlocks().size();
+        return aaa.getBlocks().size();
     };
 
-    public static void main(String[] args) {
-        Wall wall = new Wall();
-
-        wall.tempObject.getBlocks().remove(wall.tempObject);
-
-        Wall.Block br1=wall.new Block("red","wood");
-        Wall.Block br2=wall.new Block("white","wood");
-        Wall.Block br3=wall.new Block("blue","wood");
-        Wall.Block br4=wall.new Block("red","stone");
-        Wall.Block br5=wall.new Block("white","stone");
-        Wall.Block br6=wall.new Block("blue","stone");
-        
-        System.out.println();
-        System.out.println("List of blocks: " + br1.getBlocks().toString());
-        System.out.println();
-        System.out.println("All stone blocks: " + wall.findBlocksByMaterial("stone"));
-        System.out.println("All wooden blocks: " + wall.findBlocksByMaterial("wood"));
-        System.out.println();
-        System.out.println("A red block: " + wall.findBlockByColor("red"));
-        System.out.println("A white block: " + wall.findBlockByColor("white"));
-        System.out.println("A blue block: " + wall.findBlockByColor("blue"));
-        System.out.println();
-        System.out.println("List of blocks after sorting by color: " + br1.getBlocks().toString());
-        System.out.println();
-        System.out.println("Number of blocks in the list: " + wall.count());
-    }//close main
-
-
-     // inner class Block that creates blocks
-    class Block implements CompositeBlock {
-        private String color;
-        private String material;
-
-        public Block(String color, String material) {
-            this.setColor(color.toLowerCase());
-            this.setMaterial(material.toLowerCase());
-            blocks.add (this);
-        }
-        public void setColor(String color) {
-            ArrayList<String> colors = new ArrayList<>(Arrays.asList("red", "white", "blue"));
-            if ( validate (color, colors) ) {
-                this.color = color;
-            } else {
-                throw new IllegalArgumentException("No such color");
-            }
-        }
-        public void setMaterial(String material) {
-            ArrayList<String> materials = new ArrayList<>(Arrays.asList("wood", "stone"));
-            if ( validate (material, materials) ) {
-                this.material = material;
-            } else {
-                throw new IllegalArgumentException("No such material");
-            }
-            this.material = material;
-        }
-        public String getColor(){
-            return color;
-        };
-        public String getMaterial(){
-            return material;
-        };
-        public List getBlocks(){
-            return blocks;
-        };
-        private static boolean validate(String a, ArrayList<String> b){
-            return  b.stream().anyMatch(s -> s.equals(a));
-        }
-        @Override
-        public String toString() {
-            return color + " " + material;
-        }
-    }//close inner class Block
 }//close class Wall
 
 
