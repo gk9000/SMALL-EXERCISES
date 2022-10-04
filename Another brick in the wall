@@ -136,7 +136,7 @@ public class Wall implements Structure{
         }
     }//close inner class StoneBlock
 
-    // inner class stoneBlock
+    // inner class ListOfBlock
     public class ListOfBlocks implements CompositeBlock {
 
         public void addBlocks(Block b){
